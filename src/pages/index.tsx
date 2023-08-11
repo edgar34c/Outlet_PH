@@ -30,7 +30,7 @@ export default function index() {
     router.push(`/descricao?codproduto=${id}`);
   }
   const add = (produto: any) => () => {
-    cart.addToCart(produto)
+    cart.addToCart(produto, 1)
     window.location.assign("/carrinho")
   }
 

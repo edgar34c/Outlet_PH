@@ -21,6 +21,12 @@ export default function Descricao() {
     }
   }, [codproduto]); // Depend on the codproduto parameter to trigger the data fetch
 
+  useEffect(() => {
+    console.log("Quant = ", quant)
+  }, [quant]);
+
+
+
   async function carregarProdutos() {
     try {
       // Making an API request to get product data using the 'codproduto' from the query parameter
@@ -40,21 +46,21 @@ export default function Descricao() {
 
   //campo de quantidade
   function mais_prod() {
-    setQuant(quant + 1)
+    setQuant(prevQuant => prevQuant + 1);
   }
+
 
   function menos_prod() {
     if (quant > 1) {
-      setQuant(quant - 1)
+      setQuant(prevQuant => prevQuant - 1);
+      console.log(quant)
     }
   }
 
-  const add = (produto: any) => () => {
-    const updatedProduto = { ...produto, quantity: quant }
-    cart.addToCart(updatedProduto)
-    
-    window.location.assign("/carrinho")
-  }
+  const add = (produto: any, quantidade: any) => () => {
+    cart.addToCart(produto, quantidade);
+    window.location.assign("/carrinho");
+  };
 
   // Rendering the product description on the page
   return (
@@ -66,7 +72,14 @@ export default function Descricao() {
           <div className="flex flex-col gap-3">
             <img src={`http://192.168.1.8/backPH/img/${imagemPrincipal}`} alt={produtos[0].nome} width={300} height={300} />
             <img src={`http://192.168.1.8/backPH/img/${produtos[0].imagem}`} alt={produtos[0].nome} width={100} onClick={() => handleImageClick(produtos[0].imagem)} />
-            <img src={`http://192.168.1.8/backPH/img/${produtos[0].imagens}`} alt={produtos[0].nome} width={100} onClick={() => handleImageClick(produtos[0].imagens)} />
+            {produtos[0].imagens && (
+              <img
+                src={`http://192.168.1.8/backPH/img/${produtos[0].imagens}`}
+                alt={produtos[0].nome}
+                width={100}
+                onClick={() => handleImageClick(produtos[0].imagens)}
+              />
+            )}
             {produtos.length > 1 && (
               <img src={`http://192.168.1.8/backPH/img/${produtos[1].imagens}`} alt={produtos[1].nome} width={100} onClick={() => handleImageClick(produtos[1].imagens)} />
             )}
@@ -93,7 +106,7 @@ export default function Descricao() {
               type="submit"
               className="text-white font-medium rounded-lg 
             text-sm px-5 py-2.5 text-center bg-zinc-950 hover:bg-zinc-800 focus:bg-zinc-700 mt-2"
-              onClick={add(produtos[0])}
+              onClick={add(produtos[0], quant)}
             >
               Adicionar ao carrinho
             </button>

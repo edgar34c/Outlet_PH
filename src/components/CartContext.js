@@ -15,35 +15,35 @@ export const CartProvider = ({children}) => {
         }
     }, [])
 
-    const addToCart = product => {
-        setCart(old => {
-          let newCart; 
+    const addToCart = (product, quantity) => {
+      setCart(old => {
+        let newCart; 
+        
+        if (old[product.codproduto]) {
+          // Se o produto já estiver no carrinho, atualize apenas a quantidade
+          newCart = {
+            ...old,
+            [product.codproduto]: {
+              ...old[product.codproduto],
+              quantity: old[product.codproduto].quantity + quantity
+            }
+          };
+        } else {
+          // Caso contrário, adicione um novo item ao carrinho com a quantidade especificada
+          newCart = {
+            ...old,
+            [product.codproduto]: {
+              ...product,
+              quantity: quantity
+            }
+          };
+        }
       
-          if (old[product.codproduto]) {
-            // Se o produto já estiver no carrinho, atualize apenas a quantidade
-            newCart = {
-              ...old,
-              [product.codproduto]: {
-                ...old[product.codproduto],
-                quantity: old[product.codproduto].quantity + 1
-              }
-            };
-          } else {
-            // Caso contrário, adicione um novo item ao carrinho com a quantidade 1
-            newCart = {
-              ...old,
-              [product.codproduto]: {
-                ...product,
-                quantity: 1
-              }
-            };
-          }
-      
-          window.localStorage.setItem('cart', JSON.stringify(newCart));
-          return newCart; 
-        });
-      };
-
+        window.localStorage.setItem('cart', JSON.stringify(newCart));
+        return newCart;
+      });
+    };
+  
       const removeFromCart = (productId) => {
         setCart(old =>{
           const newCart ={}
@@ -53,7 +53,8 @@ export const CartProvider = ({children}) => {
             }
           })
           window.localStorage.setItem('cart', JSON.stringify(newCart));
-          return newCart
+          total(); // Atualiza o valor total após remover do carrinho
+          return newCart;
         })
       }
 
@@ -68,6 +69,7 @@ export const CartProvider = ({children}) => {
                 newCart[id] = newProduct;
             });
             window.localStorage.setItem('cart', JSON.stringify(newCart));
+            total(); // Atualiza o valor total após alterar a quantidade
             return newCart;
         });
     };
