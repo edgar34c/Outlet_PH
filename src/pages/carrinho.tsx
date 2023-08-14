@@ -23,13 +23,18 @@ export default function carrinho() {
     const chanQuantity = (id: any) => (evt: any) => {
         const newValue = Number(evt.target.value);
         if (newValue > 0) {
-          cart.changeQuantity(id, newValue);
+            cart.changeQuantity(id, newValue);
         } else {
-          evt.target.value = 0;
-          cart.changeQuantity(id, 0);
-          remove(id)();
+            evt.target.value = 0;
+            cart.changeQuantity(id, 0);
+            remove(id)();
         }
     };
+
+    const tam = (id:any)=>(e: any) => {
+        const size = e.target.value
+        cart.changeSize(id, size)
+    }
 
     const tlt = cart.valorTotal.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })
 
@@ -44,7 +49,6 @@ export default function carrinho() {
                     {Object.keys(cart.cart).map(key => {
                         const product = cart.cart[key];
                         const preco = product.preco.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })
-                        cart.total()
 
                         return (
                             <div key={key} className="w-full flex flex-col h-fit gap-4 p-4 bg-white">
@@ -63,9 +67,25 @@ export default function carrinho() {
                                         <div className="self-center text-center">
                                             <p className="text-gray-800 font-normal text-xl">{preco}</p>
                                         </div>
-                                        <div className="self-center">
-                                            <button>
-                                            </button>
+                                        <div className="text-black text-center">
+                                            <p>Tamanho:</p>
+                                            <select
+                                                className="w-1/6 border border-black rounded-md p-1"
+                                                onChange={tam(product.codproduto)}
+                                                value={product.tamanho}
+                                            >
+                                                <option value="34">34</option>
+                                                <option value="35">35</option>
+                                                <option value="36">36</option>
+                                                <option value="37">37</option>
+                                                <option value="38">38</option>
+                                                <option value="39">39</option>
+                                                <option value="40">40</option>
+                                                <option value="41">41</option>
+                                                <option value="42">42</option>
+                                                <option value="43">43</option>
+                                                <option value="44">44</option>
+                                            </select>
                                         </div>
                                     </div>
                                     <div className="flex justify-end text-gray-800 cursor-pointer" onClick={remove(key)}>
@@ -73,7 +93,7 @@ export default function carrinho() {
                                         <button className="w-1/6 text-base">Remover</button>
                                     </div>
                                     <div className="flex flex-row self-center gap-1">
-                                        <input type="number" defaultValue={product.quantity} onBlur={chanQuantity(key)} className="w-10 h-10 text-center text-gray-900 text-sm outline-none border border-gray-300 rounded-sm p-1" />
+                                        <input type="number" defaultValue={product.quantity} onChange={chanQuantity(key)} className="w-10 h-10 text-center text-gray-900 text-sm outline-none border border-gray-300 rounded-sm p-1" />
                                     </div>
                                 </div>
                             </div>

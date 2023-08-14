@@ -21,12 +21,6 @@ export default function Descricao() {
     }
   }, [codproduto]); // Depend on the codproduto parameter to trigger the data fetch
 
-  useEffect(() => {
-    console.log("Quant = ", quant)
-  }, [quant]);
-
-
-
   async function carregarProdutos() {
     try {
       // Making an API request to get product data using the 'codproduto' from the query parameter
@@ -53,14 +47,17 @@ export default function Descricao() {
   function menos_prod() {
     if (quant > 1) {
       setQuant(prevQuant => prevQuant - 1);
-      console.log(quant)
     }
   }
 
-  const add = (produto: any, quantidade: any) => () => {
-    cart.addToCart(produto, quantidade);
+  const add = (produto: any, quantidade: any, tamanho: any) => () => {
+    cart.addToCart(produto, quantidade, tamanho);
     window.location.assign("/carrinho");
   };
+
+  const tam = (e:any) =>{
+    cart.setTamanho(e.target.value)
+  }
 
   // Rendering the product description on the page
   return (
@@ -102,7 +99,11 @@ export default function Descricao() {
               <input type="text" readOnly value={`${quant}`} id='txt_quant' className="text-center w-14 text-lg" />
               <input type="button" value="-" onClick={menos_prod} className="p-1 border border-black border-collapse rounded-sm text-lg font-semibold" />
             </div>
-            <select className="w-1/2 border border-black rounded-md p-2 text-center">
+            <select 
+              className="w-1/2 border border-black rounded-md p-2 text-center" 
+              onChange={tam}
+              value={cart.tamanho}
+            >
               <option value="34">34</option>
               <option value="35">35</option>
               <option value="36">36</option>
@@ -119,7 +120,7 @@ export default function Descricao() {
               type="submit"
               className="text-white font-medium rounded-lg 
             text-sm px-5 py-2.5 text-center bg-zinc-950 hover:bg-zinc-800 focus:bg-zinc-700 mt-2"
-              onClick={add(produtos[0], quant)}
+              onClick={add(produtos[0], quant, cart.tamanho)}
             >
               Adicionar ao carrinho
             </button>

@@ -6,7 +6,7 @@ export const CartProvider = ({children}) => {
 
     const [cart, setCart] = useState({})
     const [valorTotal, setValorTotal] = useState(0)
-    
+    const [tamanho, setTamanho] = useState("34")
     
     useEffect(() =>{
         const cartLocal = window.localStorage.getItem('cart')
@@ -15,7 +15,11 @@ export const CartProvider = ({children}) => {
         }
     }, [])
 
-    const addToCart = (product, quantity) => {
+    useEffect(()=>{
+      total()
+    }, [cart])
+
+    const addToCart = (product, quantity, tamanho) => {
       setCart(old => {
         let newCart; 
         
@@ -25,7 +29,8 @@ export const CartProvider = ({children}) => {
             ...old,
             [product.codproduto]: {
               ...old[product.codproduto],
-              quantity: old[product.codproduto].quantity + quantity
+              quantity: old[product.codproduto].quantity + quantity,
+              tamanho
             }
           };
         } else {
@@ -34,7 +39,8 @@ export const CartProvider = ({children}) => {
             ...old,
             [product.codproduto]: {
               ...product,
-              quantity: quantity
+              quantity: quantity,
+              tamanho
             }
           };
         }
@@ -74,6 +80,15 @@ export const CartProvider = ({children}) => {
         });
     };
 
+    const changeSize = (id, newSize) => {
+      setCart(prevCart => {
+          const updatedCart = { ...prevCart };
+          updatedCart[id].tamanho = newSize;
+          window.localStorage.setItem('cart', JSON.stringify(updatedCart));
+          return updatedCart;
+      });
+    };
+
     const total = () => {
       const dadosLocalStorage = localStorage.getItem('cart');
       const dadosObjeto = JSON.parse(dadosLocalStorage);
@@ -94,7 +109,7 @@ export const CartProvider = ({children}) => {
     };
     
     return(
-        <CartContext.Provider value={{cart, addToCart, removeFromCart, changeQuantity, total, valorTotal}}>
+        <CartContext.Provider value={{cart, addToCart, removeFromCart, changeQuantity, total, valorTotal, tamanho, setTamanho, changeSize}}>
             {children}
         </CartContext.Provider>
     )
