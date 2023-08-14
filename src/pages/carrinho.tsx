@@ -33,7 +33,8 @@ export default function carrinho() {
 
     const tam = (id:any)=>(e: any) => {
         const size = e.target.value
-        cart.changeSize(id, size)
+        const cartItemKey = `${id}-${size}`;
+        cart.changeSize(cartItemKey, size);
     }
 
     const tlt = cart.valorTotal.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })
@@ -46,12 +47,12 @@ export default function carrinho() {
                 <div className="text-center bg-zinc-800 text-white font-bold text-4xl">Carrinho</div>
                 <div className="flex flex-col w-full h-screen md:px-14 md:py-7 bg-gray-200">
 
-                    {Object.keys(cart.cart).map(key => {
-                        const product = cart.cart[key];
+                    {Object.keys(cart.cart).map(cartItemKey => {
+                        const product = cart.cart[cartItemKey];
                         const preco = product.preco.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })
 
                         return (
-                            <div key={key} className="w-full flex flex-col h-fit gap-4 p-4 bg-white">
+                            <div key={cartItemKey} className="w-full flex flex-col h-fit gap-4 p-4 bg-white">
 
                                 <div className="flex flex-col p-4 text-lg font-semibold shadow-md border rounded-sm bg-white">
                                     <div className="flex flex-col md:flex-row gap-3 justify-between">
@@ -70,8 +71,8 @@ export default function carrinho() {
                                         <div className="text-black text-center">
                                             <p>Tamanho:</p>
                                             <select
-                                                className="w-1/6 border border-black rounded-md p-1"
-                                                onChange={tam(product.codproduto)}
+                                                className="w-16 border border-black rounded-md p-1"
+                                                onChange={(e) => tam(cartItemKey, product.tamanho)}
                                                 value={product.tamanho}
                                             >
                                                 <option value="34">34</option>
@@ -88,12 +89,12 @@ export default function carrinho() {
                                             </select>
                                         </div>
                                     </div>
-                                    <div className="flex justify-end text-gray-800 cursor-pointer" onClick={remove(key)}>
+                                    <div className="flex justify-end text-gray-800 cursor-pointer" onClick={remove(cartItemKey)}>
                                         <IoMdTrash></IoMdTrash>
                                         <button className="w-1/6 text-base">Remover</button>
                                     </div>
                                     <div className="flex flex-row self-center gap-1">
-                                        <input type="number" defaultValue={product.quantity} onChange={chanQuantity(key)} className="w-10 h-10 text-center text-gray-900 text-sm outline-none border border-gray-300 rounded-sm p-1" />
+                                        <input type="number" defaultValue={product.quantity} onChange={chanQuantity(cartItemKey)} className="w-10 h-10 text-center text-gray-900 text-sm outline-none border border-gray-300 rounded-sm p-1" />
                                     </div>
                                 </div>
                             </div>

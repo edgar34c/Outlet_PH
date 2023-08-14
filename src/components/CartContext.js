@@ -21,34 +21,35 @@ export const CartProvider = ({children}) => {
 
     const addToCart = (product, quantity, tamanho) => {
       setCart(old => {
-        let newCart; 
-        
-        if (old[product.codproduto]) {
-          // Se o produto já estiver no carrinho, atualize apenas a quantidade
-          newCart = {
-            ...old,
-            [product.codproduto]: {
-              ...old[product.codproduto],
-              quantity: old[product.codproduto].quantity + quantity,
-              tamanho
-            }
-          };
-        } else {
-          // Caso contrário, adicione um novo item ao carrinho com a quantidade especificada
-          newCart = {
-            ...old,
-            [product.codproduto]: {
-              ...product,
-              quantity: quantity,
-              tamanho
-            }
-          };
-        }
-      
-        window.localStorage.setItem('cart', JSON.stringify(newCart));
-        return newCart;
+          const cartItemKey = `${product.codproduto}-${tamanho}`;
+          let newCart;
+  
+          if (old[cartItemKey]) {
+              // Se o item já estiver no carrinho, atualize a quantidade
+              newCart = {
+                  ...old,
+                  [cartItemKey]: {
+                      ...old[cartItemKey],
+                      quantity: old[cartItemKey].quantity + quantity,
+                  }
+              };
+          } else {
+              // Caso contrário, adicione um novo item ao carrinho com a quantidade especificada
+              newCart = {
+                  ...old,
+                  [cartItemKey]: {
+                      ...product,
+                      quantity: quantity,
+                      tamanho: tamanho,
+                  }
+              };
+          }
+  
+          window.localStorage.setItem('cart', JSON.stringify(newCart));
+          return newCart;
       });
-    };
+  };
+  
   
       const removeFromCart = (productId) => {
         setCart(old =>{
@@ -80,14 +81,14 @@ export const CartProvider = ({children}) => {
         });
     };
 
-    const changeSize = (id, newSize) => {
+    const changeSize = (cartItemKey, newSize) => {
       setCart(prevCart => {
           const updatedCart = { ...prevCart };
-          updatedCart[id].tamanho = newSize;
+          updatedCart[cartItemKey].tamanho = newSize;
           window.localStorage.setItem('cart', JSON.stringify(updatedCart));
           return updatedCart;
       });
-    };
+    }; 
 
     const total = () => {
       const dadosLocalStorage = localStorage.getItem('cart');
