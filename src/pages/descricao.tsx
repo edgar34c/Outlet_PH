@@ -102,6 +102,19 @@ export default function Descricao() {
               <input type="text" readOnly value={`${quant}`} id='txt_quant' className="text-center w-14 text-lg" />
               <input type="button" value="-" onClick={menos_prod} className="p-1 border border-black border-collapse rounded-sm text-lg font-semibold" />
             </div>
+            <select className="w-1/2 border border-black rounded-md p-2 text-center">
+              <option value="34">34</option>
+              <option value="35">35</option>
+              <option value="36">36</option>
+              <option value="37">37</option>
+              <option value="38">38</option>
+              <option value="39">39</option>
+              <option value="40">40</option>
+              <option value="41">41</option>
+              <option value="42">42</option>
+              <option value="43">43</option>
+              <option value="44">44</option>
+            </select>
             <button
               type="submit"
               className="text-white font-medium rounded-lg 
