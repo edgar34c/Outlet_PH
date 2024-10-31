@@ -3,7 +3,7 @@ var endereco = document.getElementById("endereco")
 var tel = document.getElementById("telefone")
 var cpf = document.getElementById("CPF")
 var btn = document.getElementById("btn_enviar")
-var telDest = "5511940547458"
+var telDest = "xxxxxxx"
 var msg_bnt = "Olá, gostei dos produtos abaixo e gostaria de saber mais informações."
 
 
